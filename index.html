@@ -11,21 +11,32 @@
 html, body {
     margin: 0;
     padding: 0;
+
     width: 400px;
     height: 1080px;
+
     overflow: hidden;
 
-    /* 완전 투명 배경 */
+    /* OBS에서는 완전 투명 */
     background: transparent;
 
     font-family: Arial, sans-serif;
 }
 
+
+/* =========================
+   전체 메뉴판
+========================= */
+
 .board {
     width: 400px;
     height: 1080px;
-    padding: 12px 15px;
+
+    padding: 10px 15px;
+
     overflow: hidden;
+
+    background: transparent;
 }
 
 
@@ -37,40 +48,69 @@ html, body {
     height: 70px;
 
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
 
-    font-size: 35px;
+    font-size: 36px;
     font-weight: 900;
 
     color: #ff5fa2;
 
-    /* 흰색 외곽선 느낌 */
     text-shadow:
         -2px -2px 0 #ffffff,
          2px -2px 0 #ffffff,
         -2px  2px 0 #ffffff,
          2px  2px 0 #ffffff,
-         0px  0px 8px #ff8fbd;
+         0 0 8px #ff86ba;
 
-    margin-bottom: 8px;
+    margin-bottom: 5px;
 }
 
 
 /* =========================
-   메뉴 표시 영역
+   메뉴가 보이는 영역
 ========================= */
 
 .viewport {
-    height: 990px;
+    height: 985px;
+
     overflow: hidden;
 }
 
-.menu-list {
-    display: flex;
-    flex-direction: column;
 
-    animation: scrollMenu 30s linear infinite;
+/* 메뉴 전체 */
+.menu-list {
+    width: 100%;
+
+    --scroll-distance: 0px;
+}
+
+
+/* 메뉴가 길 경우 자동 스크롤 */
+.menu-list.scrolling {
+    animation: menuScroll var(--scroll-speed) linear infinite;
+}
+
+
+@keyframes menuScroll {
+
+    0% {
+        transform: translateY(0);
+    }
+
+    12% {
+        transform: translateY(0);
+    }
+
+    88% {
+        transform:
+            translateY(calc(-1 * var(--scroll-distance)));
+    }
+
+    100% {
+        transform:
+            translateY(calc(-1 * var(--scroll-distance)));
+    }
 }
 
 
@@ -79,40 +119,50 @@ html, body {
 ========================= */
 
 .menu-item {
+
+    width: 100%;
+
+    min-height: 49px;
+
     display: flex;
     align-items: center;
 
-    min-height: 48px;
+    margin-bottom: 3px;
 
-    padding: 0 5px;
-    margin-bottom: 4px;
-
-    /* 배경 없음 */
     background: transparent;
 }
 
 
-/* 가격 */
+/* =========================
+   가격
+========================= */
+
 .price {
-    width: 120px;
+
+    width: 125px;
 
     text-align: right;
 
     font-size: 21px;
     font-weight: 900;
 
-    color: #ff458f;
+    color: #ff3f8d;
 
     text-shadow:
         -1px -1px 0 #ffffff,
          1px -1px 0 #ffffff,
         -1px  1px 0 #ffffff,
-         1px  1px 0 #ffffff;
+         1px  1px 0 #ffffff,
+         0 0 4px #ffffff;
 }
 
 
-/* 하트 */
+/* =========================
+   하트
+========================= */
+
 .heart {
+
     width: 45px;
 
     text-align: center;
@@ -120,49 +170,34 @@ html, body {
     font-size: 21px;
 
     filter:
-        drop-shadow(1px 1px 1px white)
-        drop-shadow(-1px -1px 1px white);
+        drop-shadow(1px 1px 1px #ffffff)
+        drop-shadow(-1px -1px 1px #ffffff);
 }
 
 
-/* 메뉴명 */
+/* =========================
+   메뉴 이름
+========================= */
+
 .name {
+
     flex: 1;
+
+    padding-left: 2px;
 
     font-size: 20px;
     font-weight: 900;
 
-    color: #ff75ad;
+    color: #ff72ad;
+
+    white-space: nowrap;
 
     text-shadow:
         -1px -1px 0 #ffffff,
          1px -1px 0 #ffffff,
         -1px  1px 0 #ffffff,
-         1px  1px 0 #ffffff;
-}
-
-
-/* =========================
-   자동 스크롤
-========================= */
-
-@keyframes scrollMenu {
-
-    0% {
-        transform: translateY(0);
-    }
-
-    15% {
-        transform: translateY(0);
-    }
-
-    85% {
-        transform: translateY(-130px);
-    }
-
-    100% {
-        transform: translateY(-130px);
-    }
+         1px  1px 0 #ffffff,
+         0 0 4px #ffffff;
 }
 
 </style>
@@ -173,14 +208,16 @@ html, body {
 
 <div class="board">
 
+    <!-- 제목 -->
     <div class="title">
         ♥ HINA ♥
     </div>
 
-    <div class="viewport">
+
+    <!-- 메뉴 표시 -->
+    <div class="viewport" id="viewport">
 
         <div class="menu-list" id="menuList">
-
         </div>
 
     </div>
@@ -190,54 +227,138 @@ html, body {
 
 <script>
 
-/* ==================================================
-   ★ 앞으로 메뉴 수정할 때는 여기만 건드리면 됨 ★
-================================================== */
+/* =====================================================
+   구글시트 Apps Script 주소
+===================================================== */
 
-const menus = [
-
-    ["333333", "테스트히순신"],
-    ["333334", "테스트히수생"],
-    ["333333", "테스트히순신"],
-    ["333334", "테스트히수생"],
-    ["333334", "테스트히수생"],
-    ["333334", "테스트히수생"],
-    ["333334", "테스트히수생"],
-    ["333334", "테스트히수생"],
-    ["333334", "테스트히수생"],
-    ["333334", "테스트히수생"],
-    ["333334", "테스트히수생"],
-    ["333334", "테스트히수생"],
-    ["333334", "테스트히수생"],
-    ["333334", "테스트히수생"],
-    ["333334", "테스트히수생"],
-    ["333334", "테스트히수생"],
-    ["333334", "테스트히수생"],
-    ["333334", "테스트히수생"],
-    ["333334", "테스트히수생"]
-
-];
+const SHEET_URL =
+"https://script.google.com/macros/s/AKfycbxe99AfRasOtEEcT4pIbEo3cW6eonEiYc4PVL3mTmmhwkFyq2STTu8nYpQyX8Wcaz4/exec";
 
 
-/* 아래쪽은 건드릴 필요 없음 */
+/* =====================================================
+   구글시트에서 메뉴 불러오기
+===================================================== */
 
-const menuList = document.getElementById("menuList");
+async function loadMenu() {
 
-menus.forEach(menu => {
+    try {
 
-    const item = document.createElement("div");
+        const response = await fetch(
+            SHEET_URL + "?time=" + Date.now(),
+            {
+                cache: "no-store"
+            }
+        );
 
-    item.className = "menu-item";
+        const data = await response.json();
 
-    item.innerHTML = `
-        <div class="price">${menu[0]}</div>
-        <div class="heart">💗</div>
-        <div class="name">${menu[1]}</div>
-    `;
+        const menuList =
+            document.getElementById("menuList");
 
-    menuList.appendChild(item);
+        menuList.innerHTML = "";
 
-});
+
+        /* 메뉴 생성 */
+
+        data.menus.forEach(menu => {
+
+            const item =
+                document.createElement("div");
+
+            item.className = "menu-item";
+
+            item.innerHTML = `
+                <div class="price">${menu.price}</div>
+                <div class="heart">💗</div>
+                <div class="name">${menu.name}</div>
+            `;
+
+            menuList.appendChild(item);
+
+        });
+
+
+        /* 메뉴 길이에 따라 자동 스크롤 설정 */
+
+        setTimeout(setScroll, 100);
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "메뉴 불러오기 실패:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   메뉴가 화면보다 길 때만 자동 스크롤
+===================================================== */
+
+function setScroll() {
+
+    const viewport =
+        document.getElementById("viewport");
+
+    const menuList =
+        document.getElementById("menuList");
+
+
+    /* 기존 애니메이션 제거 */
+
+    menuList.classList.remove("scrolling");
+
+
+    const overflow =
+        menuList.scrollHeight - viewport.clientHeight;
+
+
+    /* 화면보다 메뉴가 길 경우 */
+
+    if (overflow > 0) {
+
+        menuList.style.setProperty(
+            "--scroll-distance",
+            overflow + "px"
+        );
+
+
+        /*
+        메뉴가 길수록 자동으로
+        스크롤 시간을 늘림
+        */
+
+        const speed =
+            Math.max(20, overflow / 20 + 20);
+
+        menuList.style.setProperty(
+            "--scroll-speed",
+            speed + "s"
+        );
+
+
+        void menuList.offsetWidth;
+
+        menuList.classList.add("scrolling");
+    }
+
+}
+
+
+/* 처음 페이지 열었을 때 */
+loadMenu();
+
+
+/* =========================
+   5초마다 구글시트 확인
+========================= */
+
+setInterval(loadMenu, 5000);
 
 </script>
 
