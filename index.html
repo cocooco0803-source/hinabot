@@ -1,39 +1,245 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>히나 메뉴판</title>
-  <style>
-    body {
-      margin: 0;
-      background: transparent;
-      font-family: Arial, sans-serif;
+<meta charset="UTF-8">
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 400px;
+    height: 1080px;
+    overflow: hidden;
+
+    /* 완전 투명 배경 */
+    background: transparent;
+
+    font-family: Arial, sans-serif;
+}
+
+.board {
+    width: 400px;
+    height: 1080px;
+    padding: 12px 15px;
+    overflow: hidden;
+}
+
+
+/* =========================
+   제목
+========================= */
+
+.title {
+    height: 70px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 35px;
+    font-weight: 900;
+
+    color: #ff5fa2;
+
+    /* 흰색 외곽선 느낌 */
+    text-shadow:
+        -2px -2px 0 #ffffff,
+         2px -2px 0 #ffffff,
+        -2px  2px 0 #ffffff,
+         2px  2px 0 #ffffff,
+         0px  0px 8px #ff8fbd;
+
+    margin-bottom: 8px;
+}
+
+
+/* =========================
+   메뉴 표시 영역
+========================= */
+
+.viewport {
+    height: 990px;
+    overflow: hidden;
+}
+
+.menu-list {
+    display: flex;
+    flex-direction: column;
+
+    animation: scrollMenu 30s linear infinite;
+}
+
+
+/* =========================
+   메뉴 한 줄
+========================= */
+
+.menu-item {
+    display: flex;
+    align-items: center;
+
+    min-height: 48px;
+
+    padding: 0 5px;
+    margin-bottom: 4px;
+
+    /* 배경 없음 */
+    background: transparent;
+}
+
+
+/* 가격 */
+.price {
+    width: 120px;
+
+    text-align: right;
+
+    font-size: 21px;
+    font-weight: 900;
+
+    color: #ff458f;
+
+    text-shadow:
+        -1px -1px 0 #ffffff,
+         1px -1px 0 #ffffff,
+        -1px  1px 0 #ffffff,
+         1px  1px 0 #ffffff;
+}
+
+
+/* 하트 */
+.heart {
+    width: 45px;
+
+    text-align: center;
+
+    font-size: 21px;
+
+    filter:
+        drop-shadow(1px 1px 1px white)
+        drop-shadow(-1px -1px 1px white);
+}
+
+
+/* 메뉴명 */
+.name {
+    flex: 1;
+
+    font-size: 20px;
+    font-weight: 900;
+
+    color: #ff75ad;
+
+    text-shadow:
+        -1px -1px 0 #ffffff,
+         1px -1px 0 #ffffff,
+        -1px  1px 0 #ffffff,
+         1px  1px 0 #ffffff;
+}
+
+
+/* =========================
+   자동 스크롤
+========================= */
+
+@keyframes scrollMenu {
+
+    0% {
+        transform: translateY(0);
     }
 
-    .menu {
-      width: 400px;
-      height: 1080px;
-      background: #222;
-      color: white;
-      text-align: center;
-      padding-top: 50px;
-      box-sizing: border-box;
+    15% {
+        transform: translateY(0);
     }
 
-    h1 {
-      font-size: 36px;
+    85% {
+        transform: translateY(-130px);
     }
 
-    p {
-      font-size: 24px;
+    100% {
+        transform: translateY(-130px);
     }
-  </style>
+}
+
+</style>
 </head>
 
+
 <body>
-  <div class="menu">
-    <h1>히나 메뉴판</h1>
-    <p>연결 성공!</p>
-  </div>
+
+<div class="board">
+
+    <div class="title">
+        ♥ HINA ♥
+    </div>
+
+    <div class="viewport">
+
+        <div class="menu-list" id="menuList">
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* ==================================================
+   ★ 앞으로 메뉴 수정할 때는 여기만 건드리면 됨 ★
+================================================== */
+
+const menus = [
+
+    ["333333", "테스트히순신"],
+    ["333334", "테스트히수생"],
+    ["333333", "테스트히순신"],
+    ["333334", "테스트히수생"],
+    ["333334", "테스트히수생"],
+    ["333334", "테스트히수생"],
+    ["333334", "테스트히수생"],
+    ["333334", "테스트히수생"],
+    ["333334", "테스트히수생"],
+    ["333334", "테스트히수생"],
+    ["333334", "테스트히수생"],
+    ["333334", "테스트히수생"],
+    ["333334", "테스트히수생"],
+    ["333334", "테스트히수생"],
+    ["333334", "테스트히수생"],
+    ["333334", "테스트히수생"],
+    ["333334", "테스트히수생"],
+    ["333334", "테스트히수생"],
+    ["333334", "테스트히수생"]
+
+];
+
+
+/* 아래쪽은 건드릴 필요 없음 */
+
+const menuList = document.getElementById("menuList");
+
+menus.forEach(menu => {
+
+    const item = document.createElement("div");
+
+    item.className = "menu-item";
+
+    item.innerHTML = `
+        <div class="price">${menu[0]}</div>
+        <div class="heart">💗</div>
+        <div class="name">${menu[1]}</div>
+    `;
+
+    menuList.appendChild(item);
+
+});
+
+</script>
+
 </body>
 </html>
