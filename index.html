@@ -8,8 +8,7 @@
     box-sizing: border-box;
 }
 
-html,
-body {
+html, body {
     margin: 0;
     padding: 0;
     width: 400px;
@@ -19,7 +18,6 @@ body {
     font-family: Arial, sans-serif;
 }
 
-/* 전체 */
 .board {
     width: 400px;
     height: 1080px;
@@ -28,17 +26,14 @@ body {
     background: transparent;
 }
 
-/* 제목 */
 .title {
     height: 44px;
-
     display: flex;
     align-items: center;
     justify-content: center;
 
     font-size: 30px;
     font-weight: 900;
-
     color: #ff4f94;
 
     text-shadow:
@@ -48,28 +43,44 @@ body {
          2px  2px 0 white;
 }
 
-/* 메뉴 표시창 */
 .viewport {
     width: 100%;
     height: 1032px;
-
     overflow: hidden;
-    position: relative;
 }
 
-/* 움직이는 메뉴 */
-.menu-list {
+.scroll-track {
     width: 100%;
-
-    transform: translateY(0);
-
     will-change: transform;
 }
 
-/* 한 줄 */
+.scroll-track.scrolling {
+    animation:
+        scrollUp
+        var(--scroll-time)
+        linear
+        infinite;
+}
+
+@keyframes scrollUp {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform:
+            translateY(
+                calc(-1 * var(--group-height))
+            );
+    }
+}
+
+.menu-group {
+    width: 100%;
+}
+
 .menu-item {
     width: 100%;
-
     height: 24px;
     min-height: 24px;
 
@@ -80,7 +91,6 @@ body {
     padding: 0;
 }
 
-/* 개수 */
 .price {
     width: 100px;
     flex-shrink: 0;
@@ -100,7 +110,6 @@ body {
          1px  1px 0 white;
 }
 
-/* 하트 */
 .heart {
     width: 34px;
     flex-shrink: 0;
@@ -111,11 +120,8 @@ body {
     line-height: 24px;
 }
 
-/* 메뉴명 */
 .name {
     flex: 1;
-
-    padding-left: 1px;
 
     font-size: 17px;
     font-weight: 900;
@@ -145,269 +151,181 @@ body {
     </div>
 
     <div class="viewport" id="viewport">
-        <div class="menu-list" id="menuList"></div>
+        <div class="scroll-track" id="scrollTrack"></div>
     </div>
 
 </div>
 
-
 <script>
 
-/* 구글시트 */
 const SHEET_URL =
 "https://script.google.com/macros/s/AKfycbxe99AfRasOtEEcT4pIbEo3cW6eonEiYc4PVL3mTmmhwkFyq2STTu8nYpQyX8Wcaz4/exec";
 
 
-/* ★ 스크롤 속도 25px/초 */
+/* ★ 속도 25px / 초 */
 const SCROLL_SPEED = 25;
 
 
-/* 이전 구글시트 데이터 */
+/* 이전 데이터 */
 let previousData = "";
 
 
-/* 현재 스크롤 위치 */
-let scrollOffset = 0;
+/* 메뉴 한 묶음 생성 */
+function createGroup(menus) {
 
-
-/* 애니메이션 관련 */
-let animationId = null;
-let lastFrameTime = null;
-
-
-/* ===============================
-   메뉴 한 줄 만들기
-=============================== */
-
-function createMenuItem(menu) {
-
-    const item =
+    const group =
         document.createElement("div");
 
-    item.className =
-        "menu-item";
+    group.className = "menu-group";
 
 
-    const price =
-        document.createElement("div");
+    menus.forEach(menu => {
 
-    price.className =
-        "price";
+        const item =
+            document.createElement("div");
 
-    price.textContent =
-        menu.price;
+        item.className = "menu-item";
 
 
-    const heart =
-        document.createElement("div");
+        const price =
+            document.createElement("div");
 
-    heart.className =
-        "heart";
-
-    heart.textContent =
-        "💗";
+        price.className = "price";
+        price.textContent = menu.price;
 
 
-    const name =
-        document.createElement("div");
+        const heart =
+            document.createElement("div");
 
-    name.className =
-        "name";
-
-    name.textContent =
-        menu.name;
+        heart.className = "heart";
+        heart.textContent = "💗";
 
 
-    item.appendChild(price);
-    item.appendChild(heart);
-    item.appendChild(name);
+        const name =
+            document.createElement("div");
+
+        name.className = "name";
+        name.textContent = menu.name;
 
 
-    return item;
+        item.appendChild(price);
+        item.appendChild(heart);
+        item.appendChild(name);
+
+        group.appendChild(item);
+
+    });
+
+
+    return group;
 }
 
 
-/* ===============================
-   메뉴 다시 만들기
-=============================== */
-
+/* 메뉴 출력 */
 function renderMenu(menus) {
 
     const viewport =
         document.getElementById("viewport");
 
-    const menuList =
-        document.getElementById("menuList");
+    const track =
+        document.getElementById("scrollTrack");
 
 
-    /* 기존 애니메이션 중지 */
-    if (animationId !== null) {
+    track.classList.remove("scrolling");
 
-        cancelAnimationFrame(animationId);
-
-        animationId = null;
-    }
+    track.innerHTML = "";
 
 
-    menuList.innerHTML = "";
-
-    scrollOffset = 0;
-
-    lastFrameTime = null;
-
-    menuList.style.transform =
-        "translateY(0px)";
-
-
-    /*
-       메뉴가 하나라도 있으면
-       화면보다 길어질 때까지 반복해서 채움.
-
-       따라서 메뉴가 2개뿐이어도
-       계속 무한 스크롤 가능.
-    */
-    if (menus.length > 0) {
-
-        let safety = 0;
-
-        while (
-            menuList.scrollHeight <
-            viewport.clientHeight + 100
-        ) {
-
-            menus.forEach(menu => {
-
-                menuList.appendChild(
-                    createMenuItem(menu)
-                );
-
-            });
-
-
-            safety++;
-
-
-            /* 혹시 모를 무한루프 방지 */
-            if (safety > 100) {
-                break;
-            }
-        }
-
-
-        /*
-           메뉴가 이미 아주 많은 경우에도
-           한 묶음 더 추가해서
-           끝부분 연결을 자연스럽게 함.
-        */
-        menus.forEach(menu => {
-
-            menuList.appendChild(
-                createMenuItem(menu)
-            );
-
-        });
-
-
-        startScrolling();
-    }
-}
-
-
-/* ===============================
-   스크롤 시작
-=============================== */
-
-function startScrolling() {
-
-    lastFrameTime = null;
-
-    animationId =
-        requestAnimationFrame(
-            scrollStep
-        );
-}
-
-
-/* ===============================
-   위로만 계속 이동
-=============================== */
-
-function scrollStep(timestamp) {
-
-    const menuList =
-        document.getElementById("menuList");
-
-
-    if (lastFrameTime === null) {
-
-        lastFrameTime =
-            timestamp;
-    }
-
-
-    const elapsed =
-        (timestamp - lastFrameTime) /
-        1000;
-
-
-    lastFrameTime =
-        timestamp;
-
-
-    /* 항상 위쪽으로 진행 */
-    scrollOffset +=
-        SCROLL_SPEED * elapsed;
-
-
-    const firstItem =
-        menuList.firstElementChild;
-
-
-    if (!firstItem) {
-
-        animationId = null;
-
+    if (menus.length === 0) {
         return;
     }
 
 
-    const itemHeight =
-        firstItem.offsetHeight;
-
-
     /*
-       첫 줄이 위로 완전히 사라지면
-       그 줄을 맨 아래로 이동
+       첫 번째 메뉴 묶음
     */
-    while (
-        scrollOffset >= itemHeight
-    ) {
 
-        scrollOffset -=
-            itemHeight;
+    const firstGroup =
+        createGroup(menus);
+
+    track.appendChild(firstGroup);
 
 
-        menuList.appendChild(
-            menuList.firstElementChild
+    requestAnimationFrame(() => {
+
+        const groupHeight =
+            firstGroup.offsetHeight;
+
+
+        if (groupHeight <= 0) {
+            return;
+        }
+
+
+        /*
+           메뉴가 적어도 화면 전체가
+           반복 메뉴로 채워지도록 복제
+        */
+
+        const copies =
+            Math.ceil(
+                viewport.clientHeight /
+                groupHeight
+            ) + 2;
+
+
+        for (
+            let i = 1;
+            i < copies;
+            i++
+        ) {
+
+            track.appendChild(
+                createGroup(menus)
+            );
+
+        }
+
+
+        /*
+           정확히 메뉴 한 묶음만큼
+           위로 이동하면
+           다음 동일한 묶음이 이어짐
+        */
+
+        track.style.setProperty(
+            "--group-height",
+            groupHeight + "px"
         );
-    }
 
 
-    menuList.style.transform =
-        `translateY(-${scrollOffset}px)`;
+        /*
+           25px / 초
+        */
+
+        const duration =
+            groupHeight /
+            SCROLL_SPEED;
 
 
-    animationId =
-        requestAnimationFrame(
-            scrollStep
+        track.style.setProperty(
+            "--scroll-time",
+            duration + "s"
         );
+
+
+        void track.offsetWidth;
+
+
+        track.classList.add(
+            "scrolling"
+        );
+
+    });
 }
 
 
-/* ===============================
-   구글시트 확인
-=============================== */
-
+/* 구글시트 불러오기 */
 async function loadMenu() {
 
     try {
@@ -438,11 +356,10 @@ async function loadMenu() {
 
 
         /*
-           시트 내용이 안 바뀌면
-           아무것도 안 건드림
-
-           → 스크롤 그대로 계속
+           내용이 똑같으면
+           현재 스크롤 그대로 유지
         */
+
         if (
             currentData ===
             previousData
@@ -451,17 +368,16 @@ async function loadMenu() {
         }
 
 
-        /*
-           시트 내용이 바뀐 경우
-        */
         previousData =
             currentData;
 
 
         /*
-           새 메뉴로 다시 만든 다음
-           자동으로 스크롤 재시작
+           구글시트가 바뀌었으면
+           새 메뉴로 다시 만들고
+           바로 스크롤 재시작
         */
+
         renderMenu(menus);
 
     }
@@ -472,11 +388,12 @@ async function loadMenu() {
             "구글시트 불러오기 실패:",
             error
         );
+
     }
 }
 
 
-/* 최초 실행 */
+/* 처음 실행 */
 loadMenu();
 
 
