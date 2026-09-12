@@ -14,8 +14,8 @@ body {
     margin: 0;
     padding: 0;
 
-    width: 280px;
-    height: 1080px;
+    width: 230px;
+    height: 1400px;
 
     overflow: hidden;
 
@@ -31,10 +31,10 @@ body {
 
 /* 전체 메뉴판 */
 .board {
-    width: 280px;
-    height: 1080px;
+    width: 230px;
+    height: 1400px;
 
-    padding: 4px 4px;
+    padding: 4px 3px;
 
     overflow: hidden;
 
@@ -42,16 +42,21 @@ body {
 }
 
 
-/* 상단 HINA */
+/* =========================
+   HINA
+========================= */
+
 .title {
     width: 100%;
-    height: 48px;
+    height: 46px;
 
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
 
-    font-size: 28px;
+    padding-left: 4px;
+
+    font-size: 27px;
     font-weight: 900;
 
     color: #ff4f94;
@@ -68,10 +73,13 @@ body {
 }
 
 
-/* 메뉴 표시 영역 */
+/* =========================
+   메뉴 표시 영역
+========================= */
+
 .viewport {
     width: 100%;
-    height: 1028px;
+    height: calc(100% - 46px);
 
     overflow: hidden;
 
@@ -79,7 +87,10 @@ body {
 }
 
 
-/* 스크롤 영역 */
+/* =========================
+   스크롤 영역
+========================= */
+
 .scroll-track {
     width: 100%;
 
@@ -113,7 +124,10 @@ body {
 }
 
 
-/* 메뉴 묶음 */
+/* =========================
+   메뉴 묶음
+========================= */
+
 .menu-group {
     width: 100%;
 
@@ -121,7 +135,10 @@ body {
 }
 
 
-/* 메뉴 한 줄 */
+/* =========================
+   메뉴 한 줄
+========================= */
+
 .menu-item {
     width: 100%;
 
@@ -131,23 +148,27 @@ body {
     display: flex;
     align-items: center;
 
-    padding: 0 2px;
+    padding: 0;
 
     margin: 0 0 2px 0;
 
     border: none;
 
     background: transparent !important;
+    background-color: rgba(0, 0, 0, 0) !important;
 }
 
 
-/* 갯수 */
+/* =========================
+   갯수
+========================= */
+
 .price {
-    width: 65px;
+    width: 60px;
 
     flex-shrink: 0;
 
-    text-align: right;
+    text-align: center;
 
     font-size: 20px;
     font-weight: 900;
@@ -159,16 +180,21 @@ body {
     -webkit-text-stroke: 0.8px #000000;
     paint-order: stroke fill;
 
+    font-variant-numeric: tabular-nums;
+
     background: transparent !important;
 
     text-shadow:
-        0px 1px 2px rgba(0, 0, 0, 0.75);
+        0 1px 2px rgba(0,0,0,0.75);
 }
 
 
-/* 하트 */
+/* =========================
+   하트
+========================= */
+
 .heart {
-    width: 23px;
+    width: 22px;
 
     flex-shrink: 0;
 
@@ -178,36 +204,37 @@ body {
 
     line-height: 31px;
 
-    margin: 0;
-
     background: transparent !important;
 }
 
 
-/* 시그 제목 */
+/* =========================
+   시그 제목
+========================= */
+
 .name {
     flex: 1;
 
     min-width: 0;
 
-    font-size: 21px;
+    font-size: 20px;
     font-weight: 900;
 
     line-height: 31px;
 
     color: #ffffff !important;
 
-    -webkit-text-stroke: 1.6px #000000;
+    -webkit-text-stroke: 1.5px #000000;
     paint-order: stroke fill;
 
     text-shadow:
-        0 2px 2px #000000,
-        0 0 3px #000000;
-
-    letter-spacing: 0;
+        0 1px 2px #000000,
+        0 0 2px #000000;
 
     white-space: nowrap;
+
     overflow: hidden;
+
     text-overflow: ellipsis;
 
     background: transparent !important;
@@ -225,6 +252,7 @@ body {
         ♥ HINA ♥
     </div>
 
+
     <div
         class="viewport"
         id="viewport"
@@ -240,17 +268,23 @@ body {
 
 <script>
 
+
 const SHEET_URL =
 "https://script.google.com/macros/s/AKfycbxe99AfRasOtEEcT4pIbEo3cW6eonEiYc4PVL3mTmmhwkFyq2STTu8nYpQyX8Wcaz4/exec";
 
 
+/* 스크롤 속도 */
 const SCROLL_SPEED = 25;
 
 
+/* 이전 데이터 */
 let previousData = "";
 
 
-/* 메뉴 한 묶음 생성 */
+/* =========================
+   메뉴 한 묶음 생성
+========================= */
+
 function createGroup(menus) {
 
     const group =
@@ -269,6 +303,10 @@ function createGroup(menus) {
             "menu-item";
 
 
+        /* =========================
+           갯수
+        ========================= */
+
         const price =
             document.createElement("div");
 
@@ -279,6 +317,43 @@ function createGroup(menus) {
             menu.price;
 
 
+        /*
+           숫자 자릿수에 따라
+           글씨 크기 자동 조절
+        */
+
+        const digitLength =
+            String(menu.price)
+            .replace(/[^0-9]/g, "")
+            .length;
+
+
+        if (digitLength >= 5) {
+
+            price.style.fontSize =
+                "16px";
+
+        }
+
+        else if (digitLength === 4) {
+
+            price.style.fontSize =
+                "18px";
+
+        }
+
+        else {
+
+            price.style.fontSize =
+                "20px";
+
+        }
+
+
+        /* =========================
+           하트
+        ========================= */
+
         const heart =
             document.createElement("div");
 
@@ -288,6 +363,10 @@ function createGroup(menus) {
         heart.textContent =
             "💗";
 
+
+        /* =========================
+           시그 제목
+        ========================= */
 
         const name =
             document.createElement("div");
@@ -312,7 +391,10 @@ function createGroup(menus) {
 }
 
 
-/* 메뉴 출력 */
+/* =========================
+   메뉴 출력
+========================= */
+
 function renderMenu(menus) {
 
     const viewport =
@@ -360,6 +442,11 @@ function renderMenu(menus) {
         }
 
 
+        /*
+           세로 1400px 화면 전체가
+           비지 않도록 반복 생성
+        */
+
         const copies =
             Math.ceil(
                 viewport.clientHeight /
@@ -380,11 +467,19 @@ function renderMenu(menus) {
         }
 
 
+        /*
+           메뉴 한 묶음 높이
+        */
+
         track.style.setProperty(
             "--group-height",
             groupHeight + "px"
         );
 
+
+        /*
+           스크롤 시간 계산
+        */
 
         const duration =
             groupHeight /
@@ -409,19 +504,25 @@ function renderMenu(menus) {
 }
 
 
-/* 구글시트 불러오기 */
+/* =========================
+   구글시트 불러오기
+========================= */
+
 async function loadMenu() {
 
     try {
 
         const response =
             await fetch(
+
                 SHEET_URL +
                 "?t=" +
                 Date.now(),
+
                 {
                     cache: "no-store"
                 }
+
             );
 
 
@@ -439,11 +540,18 @@ async function loadMenu() {
             JSON.stringify(menus);
 
 
+        /*
+           메뉴 내용이 안 바뀌었으면
+           현재 스크롤 위치 유지
+        */
+
         if (
             currentData ===
             previousData
         ) {
+
             return;
+
         }
 
 
@@ -454,6 +562,7 @@ async function loadMenu() {
         renderMenu(menus);
 
     }
+
 
     catch(error) {
 
@@ -476,6 +585,7 @@ setInterval(
     loadMenu,
     5000
 );
+
 
 </script>
 
