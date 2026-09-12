@@ -99,10 +99,7 @@ body {
 }
 
 
-/* 스크롤 실행 */
-
 .scroll-track.scrolling {
-
     animation:
         scrollUp
         var(--scroll-time)
@@ -110,8 +107,6 @@ body {
         infinite;
 }
 
-
-/* 메뉴 한 묶음만큼 이동 */
 
 @keyframes scrollUp {
 
@@ -157,19 +152,13 @@ body {
 
     border-radius: 6px;
 
-    /*
-       방송 배경 위에서도
-       글씨가 잘 보이도록
-       아주 약한 검정 배경
-    */
-
     background:
         rgba(0, 0, 0, 0.20);
 }
 
 
 /* =========================
-   가격
+   숫자 / 가격
 ========================= */
 
 .price {
@@ -221,7 +210,11 @@ body {
 
 
 /* =========================
-   메뉴 이름
+   메뉴 제목
+
+   흰색 글씨
+   + 핑크 외곽선
+   + 검정 그림자
 ========================= */
 
 .name {
@@ -235,7 +228,7 @@ body {
 
     line-height: 30px;
 
-    color: #ff68a5;
+    color: #ffffff;
 
     white-space: nowrap;
 
@@ -244,10 +237,10 @@ body {
     text-overflow: ellipsis;
 
     text-shadow:
-        -1px -1px 0 #ffffff,
-         1px -1px 0 #ffffff,
-        -1px  1px 0 #ffffff,
-         1px  1px 0 #ffffff,
+        -1px -1px 0 #ff69a5,
+         1px -1px 0 #ff69a5,
+        -1px  1px 0 #ff69a5,
+         1px  1px 0 #ff69a5,
          0px  2px 3px rgba(0,0,0,0.9);
 }
 
@@ -259,14 +252,10 @@ body {
 
 <div class="board">
 
-    <!-- 상단 제목 -->
-
     <div class="title">
         ♥ HINA ♥
     </div>
 
-
-    <!-- 메뉴 스크롤 영역 -->
 
     <div
         class="viewport"
@@ -287,40 +276,33 @@ body {
 <script>
 
 
-/* ==================================================
-   구글시트 메뉴 데이터 주소
-================================================== */
+/* =========================
+   구글시트 데이터 주소
+========================= */
 
 const SHEET_URL =
 "https://script.google.com/macros/s/AKfycbxe99AfRasOtEEcT4pIbEo3cW6eonEiYc4PVL3mTmmhwkFyq2STTu8nYpQyX8Wcaz4/exec";
 
 
-
-/* ==================================================
+/* =========================
    스크롤 속도
 
-   숫자가 클수록 빨라짐
-
-   20 = 조금 느림
-   25 = 현재 추천
-   30 = 조금 빠름
-================================================== */
+   숫자가 클수록 빠름
+========================= */
 
 const SCROLL_SPEED = 25;
 
 
-
-/* ==================================================
-   이전 메뉴 데이터 저장
-================================================== */
+/* =========================
+   이전 메뉴 데이터
+========================= */
 
 let previousData = "";
 
 
-
-/* ==================================================
+/* =========================
    메뉴 한 묶음 생성
-================================================== */
+========================= */
 
 function createGroup(menus) {
 
@@ -334,8 +316,6 @@ function createGroup(menus) {
     menus.forEach(menu => {
 
 
-        /* 메뉴 한 줄 */
-
         const item =
             document.createElement("div");
 
@@ -343,7 +323,7 @@ function createGroup(menus) {
             "menu-item";
 
 
-        /* 가격 */
+        /* 숫자 */
 
         const price =
             document.createElement("div");
@@ -367,7 +347,7 @@ function createGroup(menus) {
             "💗";
 
 
-        /* 메뉴 이름 */
+        /* 메뉴 제목 */
 
         const name =
             document.createElement("div");
@@ -379,16 +359,12 @@ function createGroup(menus) {
             menu.name;
 
 
-        /* 한 줄 조립 */
-
         item.appendChild(price);
 
         item.appendChild(heart);
 
         item.appendChild(name);
 
-
-        /* 메뉴 묶음에 추가 */
 
         group.appendChild(item);
 
@@ -399,10 +375,9 @@ function createGroup(menus) {
 }
 
 
-
-/* ==================================================
-   메뉴 화면 출력
-================================================== */
+/* =========================
+   메뉴 출력
+========================= */
 
 function renderMenu(menus) {
 
@@ -418,35 +393,26 @@ function renderMenu(menus) {
         );
 
 
-    /*
-       기존 스크롤 중지
-    */
+    /* 기존 스크롤 중지 */
 
     track.classList.remove(
         "scrolling"
     );
 
 
-    /*
-       기존 메뉴 삭제
-    */
+    /* 기존 메뉴 삭제 */
 
     track.innerHTML = "";
 
 
-    /*
-       메뉴가 없으면 종료
-    */
+    /* 메뉴 없으면 종료 */
 
     if (menus.length === 0) {
         return;
     }
 
 
-
-    /* ==================================================
-       첫 번째 메뉴 묶음
-    ================================================== */
+    /* 첫 번째 메뉴 묶음 */
 
     const firstGroup =
         createGroup(menus);
@@ -456,12 +422,6 @@ function renderMenu(menus) {
         firstGroup
     );
 
-
-
-    /*
-       화면이 실제로 생성된 다음
-       메뉴 전체 높이 계산
-    */
 
     requestAnimationFrame(() => {
 
@@ -475,20 +435,16 @@ function renderMenu(menus) {
         }
 
 
-
-        /* ==================================================
-           화면보다 메뉴가 짧아도
-
-           동일 메뉴를 여러 개 복제해서
-           화면 전체를 채움
-        ================================================== */
+        /*
+           화면이 비지 않도록
+           동일 메뉴 반복 생성
+        */
 
         const copies =
             Math.ceil(
                 viewport.clientHeight /
                 groupHeight
             ) + 2;
-
 
 
         for (
@@ -504,14 +460,9 @@ function renderMenu(menus) {
         }
 
 
-
-        /* ==================================================
+        /*
            메뉴 한 묶음 높이 저장
-
-           정확히 이 높이만큼 올라가면
-           다음 동일 메뉴가 이어져서
-           무한 스크롤처럼 보임
-        ================================================== */
+        */
 
         track.style.setProperty(
             "--group-height",
@@ -519,17 +470,13 @@ function renderMenu(menus) {
         );
 
 
-
-        /* ==================================================
+        /*
            스크롤 시간 계산
-
-           메뉴 전체 높이 ÷ 속도
-        ================================================== */
+        */
 
         const duration =
             groupHeight /
             SCROLL_SPEED;
-
 
 
         track.style.setProperty(
@@ -538,18 +485,12 @@ function renderMenu(menus) {
         );
 
 
-
-        /*
-           브라우저 강제 갱신
-        */
+        /* 강제 갱신 */
 
         void track.offsetWidth;
 
 
-
-        /*
-           스크롤 시작
-        */
+        /* 스크롤 시작 */
 
         track.classList.add(
             "scrolling"
@@ -560,20 +501,14 @@ function renderMenu(menus) {
 }
 
 
-
-/* ==================================================
+/* =========================
    구글시트 불러오기
-================================================== */
+========================= */
 
 async function loadMenu() {
 
     try {
 
-
-        /*
-           캐시 방지를 위해
-           현재 시간을 URL 뒤에 추가
-        */
 
         const response =
             await fetch(
@@ -589,19 +524,9 @@ async function loadMenu() {
             );
 
 
-
-        /*
-           JSON 변환
-        */
-
         const data =
             await response.json();
 
-
-
-        /*
-           menus 배열 확인
-        */
 
         const menus =
             Array.isArray(data.menus)
@@ -609,22 +534,14 @@ async function loadMenu() {
             : [];
 
 
-
-        /*
-           현재 메뉴를 문자열로 변환
-        */
-
         const currentData =
             JSON.stringify(menus);
 
 
-
-        /* ==================================================
-           기존 데이터와 같으면
-
-           다시 그리지 않고
-           현재 스크롤 그대로 유지
-        ================================================== */
+        /*
+           데이터 안 바뀌었으면
+           현재 스크롤 유지
+        */
 
         if (
             currentData ===
@@ -636,19 +553,9 @@ async function loadMenu() {
         }
 
 
-
-        /*
-           새 데이터 저장
-        */
-
         previousData =
             currentData;
 
-
-
-        /*
-           변경된 메뉴 표시
-        */
 
         renderMenu(menus);
 
@@ -667,22 +574,12 @@ async function loadMenu() {
 }
 
 
-
-/* ==================================================
-   페이지 처음 열렸을 때
-   바로 메뉴 불러오기
-================================================== */
+/* 처음 실행 */
 
 loadMenu();
 
 
-
-/* ==================================================
-   5초마다 구글시트 확인
-
-   구글시트를 수정하면
-   최대 약 5초 뒤 메뉴판에 반영
-================================================== */
+/* 5초마다 구글시트 확인 */
 
 setInterval(
     loadMenu,
