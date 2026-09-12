@@ -5,10 +5,11 @@
 
 <style>
 
-/* =========================
-   완전 투명 배경 강제
-========================= */
+* {
+    box-sizing: border-box;
+}
 
+/* 전체 배경 완전 투명 */
 html,
 body,
 .board,
@@ -18,15 +19,6 @@ body,
 .menu-item {
     background: transparent !important;
     background-color: rgba(0, 0, 0, 0) !important;
-}
-
-
-/* =========================
-   기본 설정
-========================= */
-
-* {
-    box-sizing: border-box;
 }
 
 html,
@@ -39,8 +31,6 @@ body {
 
     overflow: hidden;
 
-    background: rgba(0, 0, 0, 0) !important;
-
     font-family:
         Arial,
         "Noto Sans KR",
@@ -48,10 +38,7 @@ body {
 }
 
 
-/* =========================
-   전체 메뉴판
-========================= */
-
+/* 전체 메뉴판 */
 .board {
     width: 400px;
     height: 1080px;
@@ -59,15 +46,10 @@ body {
     padding: 4px 8px;
 
     overflow: hidden;
-
-    background: transparent !important;
 }
 
 
-/* =========================
-   상단 HINA
-========================= */
-
+/* 상단 HINA */
 .title {
     width: 100%;
     height: 52px;
@@ -93,35 +75,24 @@ body {
 }
 
 
-/* =========================
-   메뉴 보이는 영역
-========================= */
-
+/* 메뉴 표시 영역 */
 .viewport {
     width: 100%;
     height: 1020px;
 
     overflow: hidden;
-
-    background: transparent !important;
 }
 
 
-/* =========================
-   움직이는 메뉴
-========================= */
-
+/* 스크롤 영역 */
 .scroll-track {
     width: 100%;
 
     will-change: transform;
-
-    background: transparent !important;
 }
 
 
 .scroll-track.scrolling {
-
     animation:
         scrollUp
         var(--scroll-time)
@@ -145,22 +116,12 @@ body {
 }
 
 
-/* =========================
-   메뉴 그룹
-========================= */
-
 .menu-group {
-
     width: 100%;
-
-    background: transparent !important;
 }
 
 
-/* =========================
-   메뉴 한 줄
-========================= */
-
+/* 메뉴 한 줄 */
 .menu-item {
 
     width: 100%;
@@ -175,17 +136,11 @@ body {
 
     margin: 0 0 2px 0;
 
-    background: transparent !important;
-    background-color: rgba(0,0,0,0) !important;
-
     border: none;
 }
 
 
-/* =========================
-   숫자
-========================= */
-
+/* 숫자 */
 .price {
 
     width: 92px;
@@ -211,10 +166,7 @@ body {
 }
 
 
-/* =========================
-   하트
-========================= */
-
+/* 하트 */
 .heart {
 
     width: 32px;
@@ -231,10 +183,7 @@ body {
 }
 
 
-/* =========================
-   시그 제목
-========================= */
-
+/* 시그 제목 */
 .name {
 
     flex: 1;
@@ -246,10 +195,8 @@ body {
 
     line-height: 30px;
 
-    /*
-       연보라색
-    */
-    color: #c9a7ff;
+    /* 흰색 글씨 */
+    color: #ffffff;
 
     white-space: nowrap;
 
@@ -259,11 +206,16 @@ body {
 
     background: transparent !important;
 
+    /* 검정 테두리 */
     text-shadow:
-        -1px -1px 0 #ffffff,
-         1px -1px 0 #ffffff,
-        -1px  1px 0 #ffffff,
-         1px  1px 0 #ffffff;
+        -1px -1px 0 #000000,
+         0px -1px 0 #000000,
+         1px -1px 0 #000000,
+        -1px  0px 0 #000000,
+         1px  0px 0 #000000,
+        -1px  1px 0 #000000,
+         0px  1px 0 #000000,
+         1px  1px 0 #000000;
 }
 
 </style>
@@ -294,22 +246,13 @@ body {
 </div>
 
 
-
 <script>
-
-
-/* =========================
-   구글시트 주소
-========================= */
 
 const SHEET_URL =
 "https://script.google.com/macros/s/AKfycbxe99AfRasOtEEcT4pIbEo3cW6eonEiYc4PVL3mTmmhwkFyq2STTu8nYpQyX8Wcaz4/exec";
 
 
-/* =========================
-   스크롤 속도
-========================= */
-
+/* 스크롤 속도 */
 const SCROLL_SPEED = 25;
 
 
@@ -317,10 +260,7 @@ const SCROLL_SPEED = 25;
 let previousData = "";
 
 
-/* =========================
-   메뉴 한 묶음 생성
-========================= */
-
+/* 메뉴 한 묶음 생성 */
 function createGroup(menus) {
 
     const group =
@@ -331,7 +271,6 @@ function createGroup(menus) {
 
 
     menus.forEach(menu => {
-
 
         const item =
             document.createElement("div");
@@ -389,10 +328,7 @@ function createGroup(menus) {
 }
 
 
-/* =========================
-   메뉴 출력
-========================= */
-
+/* 메뉴 출력 */
 function renderMenu(menus) {
 
     const viewport =
@@ -441,9 +377,7 @@ function renderMenu(menus) {
         }
 
 
-        /*
-           화면 전체 채우기
-        */
+        /* 화면 전체 채우기 */
 
         const copies =
             Math.ceil(
@@ -465,9 +399,7 @@ function renderMenu(menus) {
         }
 
 
-        /*
-           메뉴 한 묶음 높이
-        */
+        /* 메뉴 한 묶음 높이 */
 
         track.style.setProperty(
             "--group-height",
@@ -475,9 +407,7 @@ function renderMenu(menus) {
         );
 
 
-        /*
-           스크롤 시간
-        */
+        /* 스크롤 시간 */
 
         const duration =
             groupHeight /
@@ -502,14 +432,10 @@ function renderMenu(menus) {
 }
 
 
-/* =========================
-   구글시트 불러오기
-========================= */
-
+/* 구글시트 불러오기 */
 async function loadMenu() {
 
     try {
-
 
         const response =
             await fetch(
@@ -539,10 +465,7 @@ async function loadMenu() {
             JSON.stringify(menus);
 
 
-        /*
-           내용이 같으면
-           스크롤 유지
-        */
+        /* 내용 동일하면 스크롤 유지 */
 
         if (
             currentData ===
@@ -576,17 +499,14 @@ async function loadMenu() {
 
 
 /* 처음 실행 */
-
 loadMenu();
 
 
 /* 5초마다 시트 확인 */
-
 setInterval(
     loadMenu,
     5000
 );
-
 
 </script>
 
