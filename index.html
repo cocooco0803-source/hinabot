@@ -4,57 +4,105 @@
 <meta charset="UTF-8">
 
 <style>
+
+/* =========================
+   전체 기본 설정
+========================= */
+
 * {
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
+
     width: 400px;
     height: 1080px;
+
     overflow: hidden;
+
     background: transparent;
-    font-family: Arial, sans-serif;
+
+    font-family:
+        Arial,
+        "Noto Sans KR",
+        sans-serif;
 }
+
+
+/* =========================
+   전체 메뉴판 영역
+========================= */
 
 .board {
     width: 400px;
     height: 1080px;
-    padding: 2px 10px;
+
+    padding: 4px 8px;
+
     overflow: hidden;
+
     background: transparent;
 }
 
+
+/* =========================
+   상단 HINA 제목
+========================= */
+
 .title {
-    height: 44px;
+    width: 100%;
+    height: 52px;
+
     display: flex;
     align-items: center;
     justify-content: center;
 
-    font-size: 30px;
+    font-size: 32px;
     font-weight: 900;
+
     color: #ff4f94;
 
+    letter-spacing: 1px;
+
     text-shadow:
-        -2px -2px 0 white,
-         2px -2px 0 white,
-        -2px  2px 0 white,
-         2px  2px 0 white;
+        -2px -2px 0 #ffffff,
+         2px -2px 0 #ffffff,
+        -2px  2px 0 #ffffff,
+         2px  2px 0 #ffffff,
+         0px  3px 4px rgba(0,0,0,0.85);
 }
+
+
+/* =========================
+   스크롤 표시 영역
+========================= */
 
 .viewport {
     width: 100%;
-    height: 1032px;
+    height: 1020px;
+
     overflow: hidden;
 }
 
+
+/* =========================
+   실제 움직이는 메뉴
+========================= */
+
 .scroll-track {
     width: 100%;
+
     will-change: transform;
 }
 
+
+/* 스크롤 실행 */
+
 .scroll-track.scrolling {
+
     animation:
         scrollUp
         var(--scroll-time)
@@ -62,7 +110,11 @@ html, body {
         infinite;
 }
 
+
+/* 메뉴 한 묶음만큼 이동 */
+
 @keyframes scrollUp {
+
     from {
         transform: translateY(0);
     }
@@ -75,142 +127,268 @@ html, body {
     }
 }
 
+
+/* =========================
+   메뉴 한 묶음
+========================= */
+
 .menu-group {
     width: 100%;
 }
 
+
+/* =========================
+   메뉴 한 줄
+========================= */
+
 .menu-item {
+
     width: 100%;
-    height: 24px;
-    min-height: 24px;
+
+    height: 30px;
+    min-height: 30px;
 
     display: flex;
     align-items: center;
 
-    margin: 0;
-    padding: 0;
+    padding: 0 7px;
+
+    margin-bottom: 2px;
+
+    border-radius: 6px;
+
+    /*
+       방송 배경 위에서도
+       글씨가 잘 보이도록
+       아주 약한 검정 배경
+    */
+
+    background:
+        rgba(0, 0, 0, 0.20);
 }
 
+
+/* =========================
+   가격
+========================= */
+
 .price {
-    width: 100px;
+
+    width: 92px;
+
     flex-shrink: 0;
 
     text-align: right;
 
-    font-size: 17px;
+    font-size: 20px;
     font-weight: 900;
-    line-height: 24px;
 
-    color: #ff3f8d;
+    line-height: 30px;
+
+    color: #ff3285;
 
     text-shadow:
-        -1px -1px 0 white,
-         1px -1px 0 white,
-        -1px  1px 0 white,
-         1px  1px 0 white;
+        -1px -1px 0 #ffffff,
+         1px -1px 0 #ffffff,
+        -1px  1px 0 #ffffff,
+         1px  1px 0 #ffffff,
+         0px  2px 3px rgba(0,0,0,0.9);
 }
 
+
+/* =========================
+   하트
+========================= */
+
 .heart {
-    width: 34px;
+
+    width: 32px;
+
     flex-shrink: 0;
 
     text-align: center;
 
-    font-size: 16px;
-    line-height: 24px;
+    font-size: 17px;
+
+    line-height: 30px;
+
+    filter:
+        drop-shadow(
+            0px 1px 1px
+            rgba(0,0,0,0.7)
+        );
 }
 
+
+/* =========================
+   메뉴 이름
+========================= */
+
 .name {
+
     flex: 1;
 
-    font-size: 17px;
-    font-weight: 900;
-    line-height: 24px;
+    min-width: 0;
 
-    color: #ff69a5;
+    font-size: 20px;
+    font-weight: 900;
+
+    line-height: 30px;
+
+    color: #ff68a5;
 
     white-space: nowrap;
+
     overflow: hidden;
+
     text-overflow: ellipsis;
 
     text-shadow:
-        -1px -1px 0 white,
-         1px -1px 0 white,
-        -1px  1px 0 white,
-         1px  1px 0 white;
+        -1px -1px 0 #ffffff,
+         1px -1px 0 #ffffff,
+        -1px  1px 0 #ffffff,
+         1px  1px 0 #ffffff,
+         0px  2px 3px rgba(0,0,0,0.9);
 }
+
 </style>
 </head>
+
 
 <body>
 
 <div class="board">
 
+    <!-- 상단 제목 -->
+
     <div class="title">
         ♥ HINA ♥
     </div>
 
-    <div class="viewport" id="viewport">
-        <div class="scroll-track" id="scrollTrack"></div>
+
+    <!-- 메뉴 스크롤 영역 -->
+
+    <div
+        class="viewport"
+        id="viewport"
+    >
+
+        <div
+            class="scroll-track"
+            id="scrollTrack"
+        ></div>
+
     </div>
 
 </div>
 
+
+
 <script>
+
+
+/* ==================================================
+   구글시트 메뉴 데이터 주소
+================================================== */
 
 const SHEET_URL =
 "https://script.google.com/macros/s/AKfycbxe99AfRasOtEEcT4pIbEo3cW6eonEiYc4PVL3mTmmhwkFyq2STTu8nYpQyX8Wcaz4/exec";
 
 
-/* ★ 속도 25px / 초 */
+
+/* ==================================================
+   스크롤 속도
+
+   숫자가 클수록 빨라짐
+
+   20 = 조금 느림
+   25 = 현재 추천
+   30 = 조금 빠름
+================================================== */
+
 const SCROLL_SPEED = 25;
 
 
-/* 이전 데이터 */
+
+/* ==================================================
+   이전 메뉴 데이터 저장
+================================================== */
+
 let previousData = "";
 
 
-/* 메뉴 한 묶음 생성 */
+
+/* ==================================================
+   메뉴 한 묶음 생성
+================================================== */
+
 function createGroup(menus) {
 
     const group =
         document.createElement("div");
 
-    group.className = "menu-group";
+    group.className =
+        "menu-group";
 
 
     menus.forEach(menu => {
 
+
+        /* 메뉴 한 줄 */
+
         const item =
             document.createElement("div");
 
-        item.className = "menu-item";
+        item.className =
+            "menu-item";
 
+
+        /* 가격 */
 
         const price =
             document.createElement("div");
 
-        price.className = "price";
-        price.textContent = menu.price;
+        price.className =
+            "price";
 
+        price.textContent =
+            menu.price;
+
+
+        /* 하트 */
 
         const heart =
             document.createElement("div");
 
-        heart.className = "heart";
-        heart.textContent = "💗";
+        heart.className =
+            "heart";
 
+        heart.textContent =
+            "💗";
+
+
+        /* 메뉴 이름 */
 
         const name =
             document.createElement("div");
 
-        name.className = "name";
-        name.textContent = menu.name;
+        name.className =
+            "name";
 
+        name.textContent =
+            menu.name;
+
+
+        /* 한 줄 조립 */
 
         item.appendChild(price);
+
         item.appendChild(heart);
+
         item.appendChild(name);
+
+
+        /* 메뉴 묶음에 추가 */
 
         group.appendChild(item);
 
@@ -221,37 +399,72 @@ function createGroup(menus) {
 }
 
 
-/* 메뉴 출력 */
+
+/* ==================================================
+   메뉴 화면 출력
+================================================== */
+
 function renderMenu(menus) {
 
     const viewport =
-        document.getElementById("viewport");
+        document.getElementById(
+            "viewport"
+        );
+
 
     const track =
-        document.getElementById("scrollTrack");
+        document.getElementById(
+            "scrollTrack"
+        );
 
 
-    track.classList.remove("scrolling");
+    /*
+       기존 스크롤 중지
+    */
+
+    track.classList.remove(
+        "scrolling"
+    );
+
+
+    /*
+       기존 메뉴 삭제
+    */
 
     track.innerHTML = "";
 
+
+    /*
+       메뉴가 없으면 종료
+    */
 
     if (menus.length === 0) {
         return;
     }
 
 
-    /*
+
+    /* ==================================================
        첫 번째 메뉴 묶음
-    */
+    ================================================== */
 
     const firstGroup =
         createGroup(menus);
 
-    track.appendChild(firstGroup);
 
+    track.appendChild(
+        firstGroup
+    );
+
+
+
+    /*
+       화면이 실제로 생성된 다음
+       메뉴 전체 높이 계산
+    */
 
     requestAnimationFrame(() => {
+
 
         const groupHeight =
             firstGroup.offsetHeight;
@@ -262,16 +475,20 @@ function renderMenu(menus) {
         }
 
 
-        /*
-           메뉴가 적어도 화면 전체가
-           반복 메뉴로 채워지도록 복제
-        */
+
+        /* ==================================================
+           화면보다 메뉴가 짧아도
+
+           동일 메뉴를 여러 개 복제해서
+           화면 전체를 채움
+        ================================================== */
 
         const copies =
             Math.ceil(
                 viewport.clientHeight /
                 groupHeight
             ) + 2;
+
 
 
         for (
@@ -287,11 +504,14 @@ function renderMenu(menus) {
         }
 
 
-        /*
-           정확히 메뉴 한 묶음만큼
-           위로 이동하면
-           다음 동일한 묶음이 이어짐
-        */
+
+        /* ==================================================
+           메뉴 한 묶음 높이 저장
+
+           정확히 이 높이만큼 올라가면
+           다음 동일 메뉴가 이어져서
+           무한 스크롤처럼 보임
+        ================================================== */
 
         track.style.setProperty(
             "--group-height",
@@ -299,13 +519,17 @@ function renderMenu(menus) {
         );
 
 
-        /*
-           25px / 초
-        */
+
+        /* ==================================================
+           스크롤 시간 계산
+
+           메뉴 전체 높이 ÷ 속도
+        ================================================== */
 
         const duration =
             groupHeight /
             SCROLL_SPEED;
+
 
 
         track.style.setProperty(
@@ -314,36 +538,70 @@ function renderMenu(menus) {
         );
 
 
+
+        /*
+           브라우저 강제 갱신
+        */
+
         void track.offsetWidth;
 
+
+
+        /*
+           스크롤 시작
+        */
 
         track.classList.add(
             "scrolling"
         );
 
     });
+
 }
 
 
-/* 구글시트 불러오기 */
+
+/* ==================================================
+   구글시트 불러오기
+================================================== */
+
 async function loadMenu() {
 
     try {
 
+
+        /*
+           캐시 방지를 위해
+           현재 시간을 URL 뒤에 추가
+        */
+
         const response =
             await fetch(
+
                 SHEET_URL +
                 "?t=" +
                 Date.now(),
+
                 {
                     cache: "no-store"
                 }
+
             );
 
+
+
+        /*
+           JSON 변환
+        */
 
         const data =
             await response.json();
 
+
+
+        /*
+           menus 배열 확인
+        */
 
         const menus =
             Array.isArray(data.menus)
@@ -351,36 +609,51 @@ async function loadMenu() {
             : [];
 
 
+
+        /*
+           현재 메뉴를 문자열로 변환
+        */
+
         const currentData =
             JSON.stringify(menus);
 
 
-        /*
-           내용이 똑같으면
+
+        /* ==================================================
+           기존 데이터와 같으면
+
+           다시 그리지 않고
            현재 스크롤 그대로 유지
-        */
+        ================================================== */
 
         if (
             currentData ===
             previousData
         ) {
+
             return;
+
         }
 
+
+
+        /*
+           새 데이터 저장
+        */
 
         previousData =
             currentData;
 
 
+
         /*
-           구글시트가 바뀌었으면
-           새 메뉴로 다시 만들고
-           바로 스크롤 재시작
+           변경된 메뉴 표시
         */
 
         renderMenu(menus);
 
     }
+
 
     catch(error) {
 
@@ -390,18 +663,32 @@ async function loadMenu() {
         );
 
     }
+
 }
 
 
-/* 처음 실행 */
+
+/* ==================================================
+   페이지 처음 열렸을 때
+   바로 메뉴 불러오기
+================================================== */
+
 loadMenu();
 
 
-/* 5초마다 구글시트 확인 */
+
+/* ==================================================
+   5초마다 구글시트 확인
+
+   구글시트를 수정하면
+   최대 약 5초 뒤 메뉴판에 반영
+================================================== */
+
 setInterval(
     loadMenu,
     5000
 );
+
 
 </script>
 
